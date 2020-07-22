@@ -17,29 +17,54 @@
  * Define Global Variables
  *
  */
+//  auto create section 4  
+const createSection = (number) => {
+  let section = document.createElement("section");
+  section.id = `section${number}`;
+  section.dataset.nav = `section${number}`;
+  let div = document.createElement("div");
+  div.classList.add("landing__container");
+  let heading = document.createElement("h2");
+  heading.textContent = `Section ${number}`;
+  let firstParagraph = document.createElement("p");
+  firstParagraph.textContent =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi fermentum metus faucibus lectus pharetra dapibus. Suspendisse potenti. Aenean aliquam elementum mi, ac euismod augue. Donec eget lacinia ex. Phasellus imperdiet porta orci eget mollis. Sed convallis sollicitudin mauris ac tincidunt. Donec bibendum, nulla eget bibendum consectetur, sem nisi aliquam leo, ut pulvinar quam nunc eu augue. Pellentesque maximus imperdiet elit a pharetra. Duis lectus mi, aliquam in mi quis, aliquam porttitor lacus. Morbi a tincidunt felis. Sed leo nunc, pharetra et elementum non, faucibus vitae elit. Integer nec libero venenatis libero ultricies molestie semper in tellus. Sed congue et odio sed euismod";
+  let secParagraph = document.createElement("p");
+  secParagraph.textContent =
+    "Aliquam a convallis justo. Vivamus venenatis, erat eget pulvinar gravida, ipsum lacus aliquet velit, vel luctus diam ipsum a diam. Cras eu tincidunt arcu, vitae rhoncus purus. Vestibulum fermentum consectetur porttitor. Suspendisse imperdiet porttitor tortor, eget elementum tortor mollis non.";
+  div.appendChild(heading);
+  div.appendChild(firstParagraph);
+  div.appendChild(secParagraph);
+  section.appendChild(div);
 
+  let main = document.getElementsByTagName("main");
+  main[0].appendChild(section);
+};
+
+createSection(4);
 let navbarList = document.getElementById("navbar__list");
 let sections = document.querySelectorAll("section");
 /**
  * End Global Variables
- * Start Helper Functions
  *
- */
+ *
+ *
+ * Start Helper Functions*/
+
 // get active section while scroll
 
-function getActiveSection (){
-  let activeSection = sections[0]
+function getActiveSection() {
+  let activeSection = sections[0];
   for (let section of sections) {
-    if (window.pageYOffset >= section.offsetTop)
-     activeSection =  section
+    if (window.pageYOffset >= section.offsetTop) activeSection = section;
   }
-  return activeSection
+  return activeSection;
 }
-//smooth scroll while clicking on anchor 
+//smooth scroll while clicking on anchor
 function clickHandler(e) {
   e.preventDefault();
-  const sectionId = this.getAttribute("href");
-  const clickedSection = document.querySelector(sectionId);
+  const sectionId = this.getAttribute("data-nav");
+  const clickedSection = document.querySelector(`#${sectionId}`);
   const offset = clickedSection.offsetTop;
   scrollTo({
     top: offset,
@@ -55,22 +80,24 @@ function clickHandler(e) {
 // build the nav
 function createNavItems() {
   let fragment = document.createDocumentFragment();
-  for (let i = 1; i <= sections.length; i++) {
+
+  sections.forEach((section, index) => {
     let navbarItem = document.createElement("li");
     let navbarLink = document.createElement("a");
-    navbarLink.href = `#section${i}`;
-    navbarLink.dataset.nav = `section${i}`;
+    navbarLink.dataset.nav = `section${index + 1}`;
     navbarLink.classList.add("menu__link");
-    navbarLink.textContent = "Section " + i;
+    navbarLink.textContent = "Section " + (index + 1);
     navbarItem.appendChild(navbarLink);
     fragment.appendChild(navbarItem);
-  }
+  });
 
   navbarList.appendChild(fragment);
 }
 
+// Build menu
+createNavItems();
 // Add class 'active' to section when near top of viewport
-function addActiveClasses() {
+const addActiveClasses = () => {
   let activeSection = getActiveSection();
   activeSection.classList.add("your-active-class");
 
@@ -97,7 +124,7 @@ function addActiveClasses() {
       item.classList.remove("active");
     }
   }
-}
+};
 
 // Scroll to anchor ID using scrollTO event
 let navLinks = document.querySelectorAll(".menu__link");
@@ -112,14 +139,12 @@ for (const item of navLinks) {
 
 // Set sections as active
 window.addEventListener("scroll", addActiveClasses);
-// Build menu
-createNavItems();
 
 // hide navbar while scroll
 let prevScroll = window.pageYOffset;
 window.addEventListener("scroll", function () {
   let currentScroll = window.pageYOffset;
-  if (prevScroll > currentScroll ) {
+  if (prevScroll > currentScroll) {
     document.getElementById("navbar").style.top = "0";
   } else {
     document.getElementById("navbar").style.top = "-52px";
